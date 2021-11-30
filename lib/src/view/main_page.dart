@@ -1,3 +1,5 @@
+// ignore_for_file: implementation_imports
+
 import 'package:flutter/material.dart';
 import 'package:vncitizens/src/utilities/view/utilities_page.dart';
 import 'package:vncitizens/src/view/center_page.dart';
