@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vncitizens/src/blocs/authentication/authentication_bloc.dart';
-import 'package:vncitizens/src/blocs/configuration/configuration_bloc.dart';
-import 'package:vncitizens/src/util/home_menu_args.dart';
-import 'package:vncitizens/src/login/view/login_page.dart';
-import 'package:vncitizens/src/repository/configuration_repository.dart';
-import 'package:vncitizens/src/repository/model/model.dart';
+import 'package:utils/src/blocs/authentication/authentication_bloc.dart';
+import 'package:utils/src/blocs/configuration/configuration_bloc.dart';
+import 'package:utils/src/login/view/login_page.dart';
+import 'package:utils/src/models/models.dart';
+import 'package:home/src/models/home_menu_args.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({Key? key}) : super(key: key);

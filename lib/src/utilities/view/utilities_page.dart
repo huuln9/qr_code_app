@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vncitizens/src/blocs/authentication/authentication_bloc.dart';
-import 'package:vncitizens/src/blocs/configuration/configuration_bloc.dart';
+import 'package:utils/src/blocs/authentication/authentication_bloc.dart';
+import 'package:utils/src/blocs/configuration/configuration_bloc.dart';
 import 'package:vncitizens/src/repository/place_repository.dart';
 import 'package:vncitizens/src/utilities/bloc/utilities_bloc.dart';
 import 'package:vncitizens/src/utilities/view/utilities_list_page.dart';

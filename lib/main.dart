@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vncitizens/route_generator.dart';
-import 'package:vncitizens/src/blocs/authentication/authentication_bloc.dart';
-import 'package:vncitizens/src/blocs/configuration/configuration_bloc.dart';
-import 'package:vncitizens/src/repository/authentication_repository.dart';
-import 'package:vncitizens/src/repository/configuration_repository.dart';
-import 'package:vncitizens/src/repository/model/model.dart';
+import 'package:utils/src/models/models.dart';
+import 'package:utils/src/repository/authentication_repository.dart';
+import 'package:utils/src/repository/configuration_repository.dart';
+import 'package:utils/src/blocs/authentication/authentication_bloc.dart';
+import 'package:utils/src/blocs/configuration/configuration_bloc.dart';
 
 void main() {
   runApp(App(configurationRepository: ConfigurationRepository()));
