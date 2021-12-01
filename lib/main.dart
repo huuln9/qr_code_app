@@ -10,23 +10,20 @@ import 'package:utils/src/blocs/authentication/authentication_bloc.dart';
 import 'package:utils/src/blocs/configuration/configuration_bloc.dart';
 
 void main() {
-  runApp(App(configurationRepository: ConfigurationRepository()));
+  runApp(const App());
 }
 
 class App extends StatelessWidget {
-  final ConfigurationRepository configurationRepository;
-
-  const App({required this.configurationRepository, Key? key})
-      : super(key: key);
+  const App({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider.value(
-      value: configurationRepository,
+    return RepositoryProvider(
+      create: (_) => ConfigurationRepository(),
       child: BlocProvider(
-        create: (_) =>
-            ConfigurationBloc(configurationRepository: configurationRepository)
-              ..add(GetConfigurationRequested()),
+        create: (context) => ConfigurationBloc(
+            configurationRepository: context.read<ConfigurationRepository>())
+          ..add(GetConfigurationRequested()),
         child: BlocBuilder<ConfigurationBloc, ConfigurationState>(
           builder: (context, state) {
             switch (state.status) {

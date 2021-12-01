@@ -6,7 +6,6 @@ import 'package:utils/src/blocs/authentication/authentication_bloc.dart';
 import 'package:utils/src/blocs/configuration/configuration_bloc.dart';
 import 'package:utils/src/login/view/login_page.dart';
 import 'package:utils/src/models/models.dart';
-import 'package:home/src/models/home_menu_args.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({Key? key}) : super(key: key);
@@ -101,10 +100,10 @@ class _MenuPageState extends State<MenuPage> {
                                       onPressed: () =>
                                           Navigator.of(context).pushNamed(
                                         homeMenu[i]['route'],
-                                        arguments: HomeMenuArgs(
+                                        arguments: [
                                           homeMenu[i]['name'] + "'s List",
                                           homeMenu[i]['tagId'],
-                                        ),
+                                        ],
                                       ),
                                       icon: SizedBox(
                                         width: 30,

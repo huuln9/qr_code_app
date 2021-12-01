@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:vncitizens/src/view/error_page.dart';
-import 'package:vncitizens/src/view/main_page.dart';
+import 'package:vncitizens/src/views/error_page.dart';
+import 'package:vncitizens/src/views/main_page.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
