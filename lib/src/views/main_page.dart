@@ -1,12 +1,12 @@
 // ignore_for_file: implementation_imports
 
 import 'package:flutter/material.dart';
-import 'package:vncitizens/src/utilities/view/utilities_page.dart';
 import 'package:vncitizens/src/views/center_page.dart';
 import 'package:vncitizens/src/views/menu_page.dart';
 import 'package:vncitizens/src/views/notification_page.dart';
 import 'package:vncitizens/src/views/setting_page.dart';
 import 'package:home/views/home_page.dart';
+import 'package:place/views/place_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -57,9 +57,9 @@ class _MainPageState extends State<MainPage> {
         if (settings.name == "/utilities") {
           final arguments = settings.arguments as List;
           return MaterialPageRoute(
-            builder: (_) => UtilitiesPage(
-              utilitiesName: arguments[0],
-              utilitiesTagId: arguments[1],
+            builder: (_) => PlacePage(
+              placeName: arguments[0],
+              placeTagId: arguments[1],
             ),
           );
         }

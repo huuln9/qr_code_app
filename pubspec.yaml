@@ -31,10 +31,13 @@ dependencies:
     sdk: flutter
 
   # packages
-  home:
-    path: lib/packages/home
   utils:
     path: lib/packages/utils
+  home:
+    path: lib/packages/home
+  place:
+    path: lib/packages/place
+  
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -66,13 +69,6 @@ flutter:
   assets:
     - assets/images/img.jpg
     - assets/images/bg.jpg
-    - assets/images/header.jpg
-    - assets/images/school.png
-    - assets/images/hospital.png
-    - assets/images/health-facility.png
-    - assets/images/traffic.png
-    - assets/images/atm.png
-    - assets/images/gas.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
