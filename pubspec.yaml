@@ -35,6 +35,8 @@ dependencies:
     path: lib/packages/utils
   home:
     path: lib/packages/home
+  menu:
+    path: lib/packages/menu
   place:
     path: lib/packages/place
   

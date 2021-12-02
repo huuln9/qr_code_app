@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:vncitizens/src/views/center_page.dart';
-import 'package:vncitizens/src/views/menu_page.dart';
 import 'package:vncitizens/src/views/notification_page.dart';
 import 'package:vncitizens/src/views/setting_page.dart';
 import 'package:home/views/home_page.dart';
 import 'package:place/views/place_page.dart';
+import 'package:menu/menu_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
