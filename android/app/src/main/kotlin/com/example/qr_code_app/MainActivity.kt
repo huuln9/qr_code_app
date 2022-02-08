@@ -1,4 +1,4 @@
-package com.example.vncitizens
+package com.example.qr_code_app
 
 import io.flutter.embedding.android.FlutterActivity
 
