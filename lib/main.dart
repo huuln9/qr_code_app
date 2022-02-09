@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sms/flutter_sms.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -120,12 +121,24 @@ class _QRViewExampleState extends State<QRViewExample> {
       });
       this.controller!.pauseCamera();
 
-      // Check resultCode is url
       String resultCode = result!.code ?? '';
+
+      // Check resultCode is url
       bool isUrl = Uri.tryParse(resultCode)?.hasAbsolutePath ?? false;
+
+      // Check resultCode is phone
+      final splitted = resultCode.split(':');
+      bool isMessage = false;
+      if (splitted.length == 3 &&
+          splitted[0] == 'smsto' &&
+          double.tryParse(splitted[1]) != null) {
+        isMessage = true;
+      }
 
       if (isUrl) {
         _showWebDialog();
+      } else if (isMessage) {
+        _showMessageDialog(splitted);
       } else {
         _showTextDialog();
       }
@@ -192,8 +205,50 @@ class _QRViewExampleState extends State<QRViewExample> {
     );
   }
 
+  Future<void> _showMessageDialog(splitted) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Tin nhắn'),
+          content: Text('Nhắn tin cho ${splitted[1]}'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('ĐÓNG'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                controller!.resumeCamera();
+              },
+            ),
+            TextButton(
+              child: const Text('ĐỒNG Ý'),
+              onPressed: () {
+                String message = splitted[2];
+                List<String> recipents = [splitted[1]];
+
+                _sendSMS(message, recipents);
+
+                Navigator.of(context).pop();
+                controller!.resumeCamera();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _launchURL(url) async {
     if (!await launch(url)) throw 'Could not launch $url';
+  }
+
+  void _sendSMS(String message, List<String> recipents) async {
+    String _result = await sendSMS(message: message, recipients: recipents)
+        .catchError((onError) {
+      print(onError);
+    });
+    print(_result);
   }
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
