@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:flutter/services.dart';
 
 void main() => runApp(const MaterialApp(home: MyHome()));
 
@@ -56,12 +57,11 @@ class _QRViewExampleState extends State<QRViewExample> {
             children: [
               const Padding(padding: EdgeInsets.all(18)),
               const SizedBox(
-                width: 220,
-                child: Text('Di chuyển Camera đến vùng chứa mã QR để quét',
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    style: TextStyle(fontSize: 18)),
-              ),
+                  width: 220,
+                  child: Text('Di chuyển Camera đến vùng chứa mã QR để quét',
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      style: TextStyle(fontSize: 18))),
               const Padding(padding: EdgeInsets.all(18)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -98,7 +98,7 @@ class _QRViewExampleState extends State<QRViewExample> {
       key: qrKey,
       onQRViewCreated: _onQRViewCreated,
       overlay: QrScannerOverlayShape(
-          cutOutBottomOffset: -50,
+          cutOutBottomOffset: -30,
           overlayColor: Colors.white,
           borderColor: Colors.blue,
           // borderRadius: 10,
@@ -117,7 +117,46 @@ class _QRViewExampleState extends State<QRViewExample> {
       setState(() {
         result = scanData;
       });
+      this.controller!.pauseCamera();
+      _showMyDialog();
     });
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Văn bản'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('${result!.code}'),
+                const Text('Would you like to approve of this message?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('ĐÓNG'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                controller!.resumeCamera();
+              },
+            ),
+            TextButton(
+              child: const Text('SAO CHÉP'),
+              onPressed: () {
+                Clipboard.setData(ClipboardData(text: result!.code));
+                Navigator.of(context).pop();
+                controller!.resumeCamera();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
