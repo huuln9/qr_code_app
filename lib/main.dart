@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() => runApp(const MaterialApp(home: MyHome()));
 
@@ -118,25 +119,27 @@ class _QRViewExampleState extends State<QRViewExample> {
         result = scanData;
       });
       this.controller!.pauseCamera();
-      _showMyDialog();
+
+      // Check resultCode is url
+      String resultCode = result!.code ?? '';
+      bool isUrl = Uri.tryParse(resultCode)?.hasAbsolutePath ?? false;
+
+      if (isUrl) {
+        _showWebDialog();
+      } else {
+        _showTextDialog();
+      }
     });
   }
 
-  Future<void> _showMyDialog() async {
+  Future<void> _showTextDialog() async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Văn bản'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('${result!.code}'),
-                const Text('Would you like to approve of this message?'),
-              ],
-            ),
-          ),
+          content: Text('${result!.code}'),
           actions: <Widget>[
             TextButton(
               child: const Text('ĐÓNG'),
@@ -157,6 +160,40 @@ class _QRViewExampleState extends State<QRViewExample> {
         );
       },
     );
+  }
+
+  Future<void> _showWebDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Trang web'),
+          content: Text('${result!.code}'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('ĐÓNG'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                controller!.resumeCamera();
+              },
+            ),
+            TextButton(
+              child: const Text('MỞ'),
+              onPressed: () {
+                _launchURL(result!.code);
+                Navigator.of(context).pop();
+                controller!.resumeCamera();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _launchURL(url) async {
+    if (!await launch(url)) throw 'Could not launch $url';
   }
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
