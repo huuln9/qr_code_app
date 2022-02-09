@@ -3,10 +3,12 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_sms/flutter_sms.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wifi_connector/wifi_connector.dart';
 
 void main() => runApp(const MaterialApp(home: MyHome()));
 
@@ -123,26 +125,55 @@ class _QRViewExampleState extends State<QRViewExample> {
 
       String resultCode = result!.code ?? '';
 
-      // Check resultCode is url
-      bool isUrl = Uri.tryParse(resultCode)?.hasAbsolutePath ?? false;
-
-      // Check resultCode is phone
       final splitted = resultCode.split(':');
-      bool isMessage = false;
-      if (splitted.length == 3 &&
-          splitted[0] == 'smsto' &&
-          double.tryParse(splitted[1]) != null) {
-        isMessage = true;
-      }
+      final splitted1 = resultCode.split(';');
+      final splitted2 = splitted1[0].split(':');
 
-      if (isUrl) {
+      if (checkURL(resultCode)) {
         _showWebDialog();
-      } else if (isMessage) {
+      } else if (checkMessage(resultCode)) {
         _showMessageDialog(splitted);
+      } else if (checkEmail(resultCode)) {
+        _showEmailDialog(splitted1, splitted2);
+      } else if (checkWifi(resultCode)) {
+        _showWifiDialog(splitted1);
       } else {
         _showTextDialog();
       }
     });
+  }
+
+  bool checkURL(resultCode) {
+    return Uri.tryParse(resultCode)?.hasAbsolutePath ?? false;
+  }
+
+  bool checkMessage(resultCode) {
+    final splitted = resultCode.split(':');
+    if (splitted.length == 3 &&
+        splitted[0] == 'smsto' &&
+        double.tryParse(splitted[1]) != null) {
+      return true;
+    }
+    return false;
+  }
+
+  bool checkEmail(resultCode) {
+    final splitted1 = resultCode.split(';');
+    final splitted2 = splitted1[0].split(':');
+
+    if (splitted2[0] == 'MATMSG' && regexEmail(splitted2[2])) {
+      return true;
+    }
+    return false;
+  }
+
+  bool checkWifi(resultCode) {
+    final splitted = resultCode.split(':');
+
+    if (splitted[0] == 'WIFI') {
+      return true;
+    }
+    return false;
   }
 
   Future<void> _showTextDialog() async {
@@ -239,6 +270,68 @@ class _QRViewExampleState extends State<QRViewExample> {
     );
   }
 
+  Future<void> _showEmailDialog(splittede1, splittede2) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Email'),
+          content: Text('Gửi mail tới ${splittede2[2]}'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('ĐÓNG'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                controller!.resumeCamera();
+              },
+            ),
+            TextButton(
+              child: const Text('ĐỒNG Ý'),
+              onPressed: () async {
+                await _sendEmail(splittede1, splittede2);
+                Navigator.of(context).pop();
+                controller!.resumeCamera();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showWifiDialog(splitted1) async {
+    final splitted2 = splitted1[1].split(':');
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Wifi'),
+          content: Text('Kết nối tới wifi ${splitted2[1]}'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('ĐÓNG'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                controller!.resumeCamera();
+              },
+            ),
+            TextButton(
+              child: const Text('ĐỒNG Ý'),
+              onPressed: () async {
+                await _connectWifi(splitted1);
+
+                Navigator.of(context).pop();
+                controller!.resumeCamera();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _launchURL(url) async {
     if (!await launch(url)) throw 'Could not launch $url';
   }
@@ -246,9 +339,33 @@ class _QRViewExampleState extends State<QRViewExample> {
   void _sendSMS(String message, List<String> recipents) async {
     String _result = await sendSMS(message: message, recipients: recipents)
         .catchError((onError) {
-      print(onError);
+      // print(onError);
     });
-    print(_result);
+    // print(_result);
+  }
+
+  Future<void> _sendEmail(splittede1, splittede2) async {
+    final eBody = splittede1[2].split(':');
+    final eSubject = splittede1[1].split(':');
+    final Email email = Email(
+      body: eBody[1],
+      subject: eSubject[1],
+      recipients: [splittede2[2]],
+      attachmentPaths: [],
+      isHTML: false,
+    );
+
+    try {
+      await FlutterEmailSender.send(email);
+    } catch (error) {
+      // print("object");
+    }
+  }
+
+  Future<void> _connectWifi(splitted1) async {
+    final ssid = splitted1[1].split(':');
+    final password = splitted1[2].split(':');
+    await WifiConnector.connectToWifi(ssid: ssid[1], password: password[1]);
   }
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
@@ -258,6 +375,13 @@ class _QRViewExampleState extends State<QRViewExample> {
         const SnackBar(content: Text('no Permission')),
       );
     }
+  }
+
+  bool regexEmail(String em) {
+    String p =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regExp = RegExp(p);
+    return regExp.hasMatch(em);
   }
 
   @override
