@@ -1,6 +1,6 @@
 # qr_code_app
 
-A new Flutter project.
+QR scan : text, web link, SMS, phone, email, wifi
 
 ## Getting Started
 

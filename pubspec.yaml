@@ -32,8 +32,7 @@ dependencies:
   qr_code_scanner: ^0.6.1
   url_launcher: ^6.0.18
   flutter_sms: ^2.3.2
-  flutter_email_sender: ^5.0.2
-  wifi_connector: ^2.0.0
+  wifi_iot: ^0.3.15
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

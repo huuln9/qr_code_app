@@ -62,13 +62,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_email_sender:
-    dependency: "direct main"
-    description:
-      name: flutter_email_sender
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "5.0.2"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -266,13 +259,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1"
-  wifi_connector:
+  wifi_iot:
     dependency: "direct main"
     description:
-      name: wifi_connector
+      name: wifi_iot
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "0.3.15"
 sdks:
   dart: ">=2.14.0 <3.0.0"
   flutter: ">=2.10.0"

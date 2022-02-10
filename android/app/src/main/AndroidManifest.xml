@@ -1,6 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.qr_code_app">
-   <application
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application
         android:label="qr_code_app"
         android:icon="@mipmap/ic_launcher">
         <activity
