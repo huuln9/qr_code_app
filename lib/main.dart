@@ -9,7 +9,6 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:qr_code_tools/qr_code_tools.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wifi_iot/wifi_iot.dart';
-// import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 void main() => runApp(const MaterialApp(home: MyHome()));
