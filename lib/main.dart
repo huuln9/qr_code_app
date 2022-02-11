@@ -4,9 +4,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sms/flutter_sms.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:qr_code_tools/qr_code_tools.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wifi_iot/wifi_iot.dart';
+// import 'package:path_provider/path_provider.dart';
+import 'package:rxdart/rxdart.dart';
 
 void main() => runApp(const MaterialApp(home: MyHome()));
 
@@ -33,6 +37,7 @@ class QRViewExample extends StatefulWidget {
 
 class _QRViewExampleState extends State<QRViewExample> {
   Barcode? result;
+  String? strResult;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
@@ -70,8 +75,9 @@ class _QRViewExampleState extends State<QRViewExample> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   ElevatedButton(
-                    onPressed: () async {
-                      await controller?.pauseCamera();
+                    onPressed: () {
+                      controller?.pauseCamera();
+                      _getQrByGallery();
                     },
                     child: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 10),
@@ -120,39 +126,62 @@ class _QRViewExampleState extends State<QRViewExample> {
         result = scanData;
       });
       this.controller!.pauseCamera();
-
       String resultCode = result!.code ?? '';
-
-      final splitted = resultCode.split(':');
-
-      if (_checkURL(resultCode)) {
-        _showWebDialog();
-      } else if (_checkMessage(resultCode)) {
-        _showMessageDialog(splitted);
-      } else if (_checkPhone(resultCode)) {
-        _showPhoneDialog(splitted);
-      } else if (_checkEmail(resultCode)) {
-        // split code
-        final splitted1 = resultCode.split(';');
-        var splitted = [];
-        for (var e in splitted1) {
-          final splitted2 = e.split(':');
-          splitted = splitted..addAll(splitted2);
-        }
-        _showEmailDialog(splitted);
-      } else if (_checkWifi(resultCode)) {
-        // split code
-        final splitted1 = resultCode.split(';');
-        var splitted = [];
-        for (var e in splitted1) {
-          final splitted2 = e.split(':');
-          splitted = splitted..addAll(splitted2);
-        }
-        _showWifiDialog(splitted);
-      } else {
-        _showTextDialog();
-      }
+      _exeQrCode(resultCode);
     });
+  }
+
+  void _getQrByGallery() {
+    Stream.fromFuture(ImagePicker().pickImage(source: ImageSource.gallery))
+        .flatMap((file) {
+      // setState(() {
+      // _qrcodeFile = file.path;
+      // });
+      return Stream.fromFuture(QrCodeToolsPlugin.decodeFrom(file?.path));
+    }).listen((data) {
+      setState(() {
+        strResult = data;
+      });
+      _exeQrCode(strResult!);
+    }).onError((error, stackTrace) {
+      setState(() {
+        strResult = '';
+      });
+      // print('${error.toString()}');
+      _showNullDialog();
+    });
+  }
+
+  void _exeQrCode(String resultCode) {
+    final splitted = resultCode.split(':');
+
+    if (_checkURL(resultCode)) {
+      _showWebDialog();
+    } else if (_checkMessage(resultCode)) {
+      _showMessageDialog(splitted);
+    } else if (_checkPhone(resultCode)) {
+      _showPhoneDialog(splitted);
+    } else if (_checkEmail(resultCode)) {
+      // split code
+      final splitted1 = resultCode.split(';');
+      var splitted = [];
+      for (var e in splitted1) {
+        final splitted2 = e.split(':');
+        splitted = splitted..addAll(splitted2);
+      }
+      _showEmailDialog(splitted);
+    } else if (_checkWifi(resultCode)) {
+      // split code
+      final splitted1 = resultCode.split(';');
+      var splitted = [];
+      for (var e in splitted1) {
+        final splitted2 = e.split(':');
+        splitted = splitted..addAll(splitted2);
+      }
+      _showWifiDialog(splitted);
+    } else {
+      _showTextDialog();
+    }
   }
 
   bool _checkURL(resultCode) {
@@ -406,6 +435,28 @@ class _QRViewExampleState extends State<QRViewExample> {
                 controller!.resumeCamera();
               },
             ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showNullDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Thông báo'),
+          content: const Text('Không tìm thấy mã QR'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('ĐÓNG'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                controller!.resumeCamera();
+              },
+            )
           ],
         );
       },
