@@ -155,7 +155,7 @@ class _QRViewExampleState extends State<QRViewExample> {
     final splitted = resultCode.split(':');
 
     if (_checkURL(resultCode)) {
-      _showWebDialog();
+      _showWebDialog(resultCode);
     } else if (_checkMessage(resultCode)) {
       _showMessageDialog(splitted);
     } else if (_checkPhone(resultCode)) {
@@ -179,7 +179,7 @@ class _QRViewExampleState extends State<QRViewExample> {
       }
       _showWifiDialog(splitted);
     } else {
-      _showTextDialog();
+      _showTextDialog(resultCode);
     }
   }
 
@@ -244,14 +244,14 @@ class _QRViewExampleState extends State<QRViewExample> {
     return false;
   }
 
-  Future<void> _showTextDialog() async {
+  Future<void> _showTextDialog(resultCode) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Văn bản'),
-          content: Text('${result!.code}'),
+          content: Text('$resultCode'),
           actions: <Widget>[
             TextButton(
               child: const Text('ĐÓNG'),
@@ -274,14 +274,14 @@ class _QRViewExampleState extends State<QRViewExample> {
     );
   }
 
-  Future<void> _showWebDialog() async {
+  Future<void> _showWebDialog(resultCode) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Trang web'),
-          content: Text('${result!.code}'),
+          content: Text('$resultCode'),
           actions: <Widget>[
             TextButton(
               child: const Text('ĐÓNG'),
