@@ -518,10 +518,13 @@ class _QRViewExampleState extends State<QRViewExample> {
         networkSecurity = NetworkSecurity.NONE;
         break;
     }
-    WiFiForIoTPlugin.connect(splitted[ssidIndex],
-        password: splitted[passwordIndex],
-        joinOnce: true,
-        security: networkSecurity);
+    WiFiForIoTPlugin.connect(
+      splitted[ssidIndex],
+      password: splitted[passwordIndex],
+      joinOnce: true,
+      security: networkSecurity,
+      withInternet: true,
+    );
   }
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
