@@ -263,7 +263,7 @@ class _QRViewExampleState extends State<QRViewExample> {
             TextButton(
               child: const Text('SAO CHÉP'),
               onPressed: () {
-                Clipboard.setData(ClipboardData(text: result!.code));
+                Clipboard.setData(ClipboardData(text: resultCode));
                 Navigator.of(context).pop();
                 controller!.resumeCamera();
               },
@@ -293,7 +293,7 @@ class _QRViewExampleState extends State<QRViewExample> {
             TextButton(
               child: const Text('MỞ'),
               onPressed: () {
-                _launchURL(result!.code);
+                _launchURL(resultCode);
                 Navigator.of(context).pop();
                 controller!.resumeCamera();
               },
