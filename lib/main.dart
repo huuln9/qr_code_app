@@ -463,7 +463,7 @@ class _QRViewExampleState extends State<QRViewExample> {
   }
 
   void _launchURL(url) async {
-    if (!await launch(url)) throw 'Could not launch $url';
+    if (!await launch(url, forceWebView: true)) throw 'Could not launch $url';
   }
 
   void _sendSMS(String message, List<String> recipents) async {
