@@ -40,6 +40,8 @@ class _QRViewExampleState extends State<QRViewExample> {
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
+  static const qrcodewifiChannel = MethodChannel('vncitizens/qrcodewifi');
+
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
   @override
@@ -518,13 +520,21 @@ class _QRViewExampleState extends State<QRViewExample> {
         networkSecurity = NetworkSecurity.NONE;
         break;
     }
-    WiFiForIoTPlugin.connect(
-      splitted[ssidIndex],
-      password: splitted[passwordIndex],
-      joinOnce: true,
-      security: networkSecurity,
-      withInternet: true,
-    );
+    // WiFiForIoTPlugin.connect(
+    //   splitted[ssidIndex],
+    //   password: splitted[passwordIndex],
+    //   joinOnce: true,
+    //   security: networkSecurity,
+    //   withInternet: true,
+    // );
+    _connectWifiInDevice();
+  }
+
+  _connectWifiInDevice() async {
+    final String reHuu =
+        await qrcodewifiChannel.invokeMethod('connectWifiInDevice');
+
+    print(reHuu);
   }
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
