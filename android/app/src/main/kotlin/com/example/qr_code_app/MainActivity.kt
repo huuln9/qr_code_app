@@ -15,11 +15,6 @@ class MainActivity: FlutterActivity() {
     private val QRCODEWIFI_CHANNEL = "vncitizens/connectwifi"
     private lateinit var channel: MethodChannel
 
-    private lateinit var wifiNetworkSpecifier: WifiNetworkSpecifier
-    private lateinit var networkCallback: ConnectivityManager.NetworkCallback()
-    private lateinit var networkSSID: String
-    private lateinit var networkPassword: String
-
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
@@ -29,17 +24,17 @@ class MainActivity: FlutterActivity() {
             if (call.method == "connectWifiInDevice") {
                 val arguments = call.arguments() as Map<String, String>
 
-                networkSSID = arguments["ssid"] ?: ""
-                networkPassword = arguments["password"] ?: ""
+                val networkSSID = arguments["ssid"] ?: ""
+                val networkPassword = arguments["password"] ?: ""
 
-                wifiNetworkSpecifier = WifiNetworkSpecifier.Builder()
+                val wifiNetworkSpecifier = WifiNetworkSpecifier.Builder()
                 .setSsid(networkSSID)
                 .setWpa2Passphrase(networkPassword)
                 .build()
 
                 val connectivityManager = context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
                 
-                networkCallback = object : ConnectivityManager.NetworkCallback() {
+                val networkCallback = object : ConnectivityManager.NetworkCallback() {
                     override fun onUnavailable() {
                         super.onUnavailable()
                     }
