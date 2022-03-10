@@ -40,7 +40,7 @@ class _QRViewExampleState extends State<QRViewExample> {
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
-  static const qrcodewifiChannel = MethodChannel('vncitizens/qrcodewifi');
+  static const qrcodewifiChannel = MethodChannel('vncitizens/connectwifi');
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -508,16 +508,20 @@ class _QRViewExampleState extends State<QRViewExample> {
         securityIndex = i + 1;
       }
     }
-    NetworkSecurity networkSecurity;
+    // NetworkSecurity networkSecurity;
+    String networkSecurity;
     switch (splitted[securityIndex]) {
       case 'WPA':
-        networkSecurity = NetworkSecurity.WPA;
+        // networkSecurity = NetworkSecurity.WPA;
+        networkSecurity = 'WPA';
         break;
       case 'WEP':
-        networkSecurity = NetworkSecurity.WEP;
+        // networkSecurity = NetworkSecurity.WEP;
+        networkSecurity = 'WEP';
         break;
       default:
-        networkSecurity = NetworkSecurity.NONE;
+        // networkSecurity = NetworkSecurity.NONE;
+        networkSecurity = 'NONE';
         break;
     }
     // WiFiForIoTPlugin.connect(
@@ -527,12 +531,14 @@ class _QRViewExampleState extends State<QRViewExample> {
     //   security: networkSecurity,
     //   withInternet: true,
     // );
-    _connectWifiInDevice();
+    _connectWifiInDevice(
+        splitted[ssidIndex], splitted[passwordIndex], networkSecurity);
   }
 
-  _connectWifiInDevice() async {
+  _connectWifiInDevice(ssid, password, securitty) async {
+    final arguments = {'ssid': ssid, 'password': password};
     final String reHuu =
-        await qrcodewifiChannel.invokeMethod('connectWifiInDevice');
+        await qrcodewifiChannel.invokeMethod('connectWifiInDevice', arguments);
 
     print(reHuu);
   }
