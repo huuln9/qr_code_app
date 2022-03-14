@@ -40,7 +40,8 @@ class _QRViewExampleState extends State<QRViewExample> {
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
-  static const qrcodewifiChannel = MethodChannel('vncitizens/connectwifi');
+  static const wifiAndroidChannel = MethodChannel('android/connectwifi');
+  static const wifiIosChannel = MethodChannel('ios/connectwifi');
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -543,7 +544,7 @@ class _QRViewExampleState extends State<QRViewExample> {
   _connectWifiInDeviceAndroid(ssid, password, securitty) async {
     final arguments = {'ssid': ssid, 'password': password};
     final String result =
-        await qrcodewifiChannel.invokeMethod('connectWifiInDevice', arguments);
+        await wifiAndroidChannel.invokeMethod('connectWifiInDevice', arguments);
 
     log('QR scan: ' + result);
   }

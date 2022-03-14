@@ -15,13 +15,13 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity: FlutterActivity() {
-    private val QRCODEWIFI_CHANNEL = "vncitizens/connectwifi"
+    private val WIFI_CHANNEL = "android/connectwifi"
     private lateinit var channel: MethodChannel
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
-        channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, QRCODEWIFI_CHANNEL)
+        channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, WIFI_CHANNEL)
 
         channel.setMethodCallHandler { call, result ->
             if (call.method == "connectWifiInDevice") {
