@@ -537,10 +537,10 @@ class _QRViewExampleState extends State<QRViewExample> {
 
   _connectWifiInDevice(ssid, password, securitty) async {
     final arguments = {'ssid': ssid, 'password': password};
-    final String reHuu =
+    final String result =
         await qrcodewifiChannel.invokeMethod('connectWifiInDevice', arguments);
 
-    print(reHuu);
+    log('QR scan: ' + result);
   }
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {

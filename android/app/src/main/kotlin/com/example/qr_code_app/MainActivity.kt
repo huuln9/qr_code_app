@@ -79,7 +79,9 @@ class MainActivity: FlutterActivity() {
 
                     connectivityManager?.requestNetwork(networkRequest, networkCallback)
 
-                    startActivityForResult(Intent(android.provider.Settings.ACTION_WIFI_SETTINGS), 1);
+                    startActivityForResult(Intent(android.provider.Settings.ACTION_WIFI_SETTINGS), 1)
+
+                    result.success("connect wifi in device successfully")
                 }
             }
         }
