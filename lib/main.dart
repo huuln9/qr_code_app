@@ -501,38 +501,35 @@ class _QRViewExampleState extends State<QRViewExample> {
   Future<void> _connectWifi(splitted, ssidIndex) async {
     // find password & security index
     int passwordIndex = 0;
-    // int securityIndex = 0;
+    int securityIndex = 0;
     for (var i = 0; i < splitted.length; i++) {
       if (splitted[i].toLowerCase() == 'p') {
         passwordIndex = i + 1;
-      } /*else if (splitted[i].toLowerCase() == 't') {
+      } else if (splitted[i].toLowerCase() == 't') {
         securityIndex = i + 1;
-      }*/
+      }
     }
-    // NetworkSecurity networkSecurity;
-    // String networkSecurity;
-    // switch (splitted[securityIndex]) {
-    //   case 'WPA':
-    //     networkSecurity = NetworkSecurity.WPA;
-    //     networkSecurity = 'WPA';
-    //     break;
-    //   case 'WEP':
-    //     networkSecurity = NetworkSecurity.WEP;
-    //     networkSecurity = 'WEP';
-    //     break;
-    //   default:
-    //     networkSecurity = NetworkSecurity.NONE;
-    //     networkSecurity = 'NONE';
-    //     break;
-    // }
 
-    // WiFiForIoTPlugin.connect(
-    //   splitted[ssidIndex],
-    //   password: splitted[passwordIndex],
-    //   joinOnce: true,
-    //   security: networkSecurity,
-    //   withInternet: true,
-    // );
+    NetworkSecurity networkSecurity;
+    switch (splitted[securityIndex]) {
+      case 'WPA':
+        networkSecurity = NetworkSecurity.WPA;
+        break;
+      case 'WEP':
+        networkSecurity = NetworkSecurity.WEP;
+        break;
+      default:
+        networkSecurity = NetworkSecurity.NONE;
+        break;
+    }
+
+    WiFiForIoTPlugin.connect(
+      splitted[ssidIndex],
+      password: splitted[passwordIndex],
+      joinOnce: true,
+      security: networkSecurity,
+      withInternet: true,
+    );
 
     if (Platform.isAndroid) {
       _connectWifiInDeviceAndroid(splitted[ssidIndex], splitted[passwordIndex]);
