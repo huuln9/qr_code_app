@@ -531,17 +531,24 @@ class _QRViewExampleState extends State<QRViewExample> {
     //   security: networkSecurity,
     //   withInternet: true,
     // );
-    _connectWifiInDevice(
-        splitted[ssidIndex], splitted[passwordIndex], networkSecurity);
+
+    if (Platform.isAndroid) {
+      _connectWifiInDeviceAndroid(
+          splitted[ssidIndex], splitted[passwordIndex], networkSecurity);
+    } else if (Platform.isIOS) {
+      _connectWifiInDeviceIos();
+    }
   }
 
-  _connectWifiInDevice(ssid, password, securitty) async {
+  _connectWifiInDeviceAndroid(ssid, password, securitty) async {
     final arguments = {'ssid': ssid, 'password': password};
     final String result =
         await qrcodewifiChannel.invokeMethod('connectWifiInDevice', arguments);
 
     log('QR scan: ' + result);
   }
+
+  _connectWifiInDeviceIos() async {}
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
     log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
