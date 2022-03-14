@@ -149,7 +149,7 @@ class _QRViewExampleState extends State<QRViewExample> {
       setState(() {
         strResult = '';
       });
-      // print('${error.toString()}');
+      log(error.toString());
       _showNullDialog();
     });
   }
@@ -158,12 +158,16 @@ class _QRViewExampleState extends State<QRViewExample> {
     final splitted = resultCode.split(':');
 
     if (_checkURL(resultCode)) {
+      log('scan type: URL');
       _showWebDialog(resultCode);
     } else if (_checkMessage(resultCode)) {
+      log('scan type: Message');
       _showMessageDialog(splitted);
     } else if (_checkPhone(resultCode)) {
+      log('scan type: Phone');
       _showPhoneDialog(splitted);
     } else if (_checkEmail(resultCode)) {
+      log('scan type: Email');
       // split code
       final splitted1 = resultCode.split(';');
       var splitted = [];
@@ -173,6 +177,7 @@ class _QRViewExampleState extends State<QRViewExample> {
       }
       _showEmailDialog(splitted);
     } else if (_checkWifi(resultCode)) {
+      log('scan type: Wifi');
       // split code
       final splitted1 = resultCode.split(';');
       var splitted = [];
@@ -182,6 +187,7 @@ class _QRViewExampleState extends State<QRViewExample> {
       }
       _showWifiDialog(splitted);
     } else {
+      log('scan type: Text');
       _showTextDialog(resultCode);
     }
   }
