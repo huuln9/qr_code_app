@@ -7,20 +7,19 @@ import Flutter
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+
+    let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
+    let methodChannel = FlutterMethodChannel(name: "qrcode_wifisetting", binaryMessenger: controller.binaryMessenger)
+
+    methodChannel.setMethodCallHandler({
+      (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
+      if (call.method == "redirectToWifiSettingIos") {
+        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+        result.success("Redirect to wifi setting successfully")
+      }
+    })
+    
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
-  }
-
-  var configuration = NEHotspotConfiguration.init(ssid: "wifi name", passphrase: "wifi password", isWEP: false)
-  configuration.joinOnce = true
-
-  NEHotspotConfigurationManager.shared.apply(configuration) { (error) in
-      if error != nil {
-          //an error occurred
-          print(error?.localizedDescription)
-      }
-      else {
-          //success
-      }
   }
 }
