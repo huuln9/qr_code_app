@@ -281,6 +281,59 @@ class _QRViewExampleState extends State<QRViewExample> {
         );
       },
     );
+    
+    // Get.defaultDialog(
+    //   title: 'van ban'.tr,
+    //   middleText: '$scanResultStr',
+    //   titleStyle: const TextStyle(color: Colors.blue),
+    //   barrierDismissible: false,
+    //   radius: 5,
+    //   actions: [
+    //     TextButton(
+    //       child: Text('dong'.tr.toUpperCase()),
+    //       onPressed: () {
+    //         Get.back();
+    //         qrViewController!.resumeCamera();
+    //       },
+    //     ),
+    //     TextButton(
+    //       child: Text('sao chep'.tr.toUpperCase()),
+    //       onPressed: () {
+    //         Clipboard.setData(ClipboardData(text: scanResultStr));
+    //         Get.back();
+    //         qrViewController!.resumeCamera();
+    //       },
+    //     ),
+    //   ],
+    // );
+
+    // return showDialog<void>(
+    //   context: context,
+    //   barrierDismissible: false, // user must tap button!
+    //   builder: (BuildContext context) {
+    //     return AlertDialog(
+    //       title: Text('van ban'.tr),
+    //       content: Text('$scanResultStr'),
+    //       actions: <Widget>[
+    //         TextButton(
+    //           child: Text('dong'.tr.toUpperCase()),
+    //           onPressed: () {
+    //             Navigator.of(context).pop();
+    //             controller!.resumeCamera();
+    //           },
+    //         ),
+    //         TextButton(
+    //           child: Text('sao chep'.toUpperCase()),
+    //           onPressed: () {
+    //             Clipboard.setData(ClipboardData(text: scanResultStr));
+    //             Navigator.of(context).pop();
+    //             controller!.resumeCamera();
+    //           },
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
   }
 
   Future<void> _showWebDialog(resultCode) async {
